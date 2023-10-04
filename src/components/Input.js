@@ -30,6 +30,7 @@ const Input = () => {
     console.log("handleAmount fired up");
 
     setAmount(e.target.value);
+    if (firstCurrency === secondCurrency) setConvertedAmount(e.target.value);
   }
   function handleFirstCurrency(e) {
     console.log("handleFirstCurrency fired up");
