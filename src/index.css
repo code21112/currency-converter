@@ -16,3 +16,14 @@ code {
   font-family: sans-serif;
   text-align: center;
 }
+
+.container {
+  display: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+.select {
+  margin: 0.3rem;
+}

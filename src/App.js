@@ -2,7 +2,7 @@ import Input from "./components/Input";
 
 function App() {
   return (
-    <div>
+    <div className="container">
       <Input />
     </div>
   );

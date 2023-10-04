@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 
 const Input = () => {
   const [amount, setAmount] = useState("1");
-  const [firstCurrency, setFirstCurrency] = useState("USD");
-  const [secondCurrency, setSecondCurrency] = useState("EUR");
+  const [fromCur, setFromCur] = useState("USD");
+  const [toCur, setToCur] = useState("EUR");
   const [convertedAmount, setConvertedAmount] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -13,12 +13,12 @@ const Input = () => {
         setIsLoading(true);
         try {
           const res = await fetch(
-            `https://api.frankfurter.app/latest?amount=${amount}=&from=${firstCurrency}&to=${secondCurrency}`
+            `https://api.frankfurter.app/latest?amount=${amount}=&from=${fromCur}&to=${toCur}`
           );
           const data = await res.json();
           console.log("data", data);
           // console.log("data.rates[secondCurrency]", data.rates[secondCurrency]);
-          setConvertedAmount(data?.rates[secondCurrency]);
+          setConvertedAmount(data?.rates[toCur]);
         } catch (error) {
           console.log(error);
         }
@@ -26,25 +26,25 @@ const Input = () => {
       fetchData();
       setIsLoading(false);
     },
-    [amount, firstCurrency, secondCurrency]
+    [amount, fromCur, toCur]
   );
 
   function handleAmount(e) {
     console.log("handleAmount fired up");
 
     setAmount(e.target.value);
-    if (firstCurrency === secondCurrency) setConvertedAmount(e.target.value);
+    if (fromCur === toCur) setConvertedAmount(e.target.value);
   }
   function handleFirstCurrency(e) {
     console.log("handleFirstCurrency fired up");
     console.log(e.target.value);
     console.log(typeof e.target.value);
 
-    if (e.target.value !== secondCurrency) {
-      setFirstCurrency(e.target.value);
+    if (e.target.value !== toCur) {
+      setFromCur(e.target.value);
     } else {
       setConvertedAmount(amount);
-      setFirstCurrency(e.target.value);
+      setFromCur(e.target.value);
     }
   }
 
@@ -53,16 +53,17 @@ const Input = () => {
     console.log(e.target.value);
     console.log(typeof e.target.value);
 
-    if (e.target.value !== firstCurrency) {
-      setSecondCurrency(e.target.value);
+    if (e.target.value !== fromCur) {
+      setToCur(e.target.value);
     } else {
       setConvertedAmount(amount);
-      setSecondCurrency(e.target.value);
+      setToCur(e.target.value);
     }
   }
 
   return (
     <>
+
       <input
         type="text"
         value={amount}
@@ -73,6 +74,7 @@ const Input = () => {
         onChange={(e) => handleFirstCurrency(e)}
         defaultValue="USD"
         disabled={isLoading}
+
       >
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
@@ -83,6 +85,7 @@ const Input = () => {
         onChange={(e) => handleSecondCurrency(e)}
         defaultValue="EUR"
         disabled={isLoading}
+        className="select"
       >
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
@@ -90,9 +93,8 @@ const Input = () => {
         <option value="INR">INR</option>
       </select>
       <p>OUTPUT</p>
-      <p>{firstCurrency}</p>
       <p>
-        {amount} {firstCurrency} is equal to {convertedAmount} {secondCurrency}.
+        {amount} {fromCur} is equal to {convertedAmount} {toCur}.
       </p>
     </>
   );
