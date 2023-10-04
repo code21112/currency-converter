@@ -9,11 +9,14 @@ const Input = () => {
 
   useEffect(
     function () {
+      const controller = new AbortController();
+
       async function convert() {
         setIsLoading(true);
         try {
           const res = await fetch(
-            `https://api.frankfurter.app/latest?amount=${amount}=&from=${fromCur}&to=${toCur}`
+            `https://api.frankfurter.app/latest?amount=${amount}=&from=${fromCur}&to=${toCur}`,
+            { signal: controller.signal }
           );
           const data = await res.json();
           console.log("data", data);
@@ -29,13 +32,16 @@ const Input = () => {
         return;
       }
       convert();
+
+      return function () {
+        controller.abort();
+      };
     },
     [amount, fromCur, toCur]
   );
 
   function handleAmount(e) {
     console.log("handleAmount fired up");
-
     setAmount(e.target.value);
     if (fromCur === toCur) setConvertedAmount(e.target.value);
   }
@@ -67,12 +73,7 @@ const Input = () => {
 
   return (
     <>
-      <input
-        type="text"
-        value={amount}
-        onChange={(e) => handleAmount(e)}
-        disabled={isLoading}
-      />
+      <input type="text" value={amount} onChange={(e) => handleAmount(e)} />
       <select
         onChange={(e) => handleFirstCurrency(e)}
         defaultValue="USD"
