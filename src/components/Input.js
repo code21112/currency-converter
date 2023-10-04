@@ -5,10 +5,12 @@ const Input = () => {
   const [firstCurrency, setFirstCurrency] = useState("USD");
   const [secondCurrency, setSecondCurrency] = useState("EUR");
   const [convertedAmount, setConvertedAmount] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(
     function () {
       async function fetchData() {
+        setIsLoading(true);
         try {
           const res = await fetch(
             `https://api.frankfurter.app/latest?amount=${amount}=&from=${firstCurrency}&to=${secondCurrency}`
@@ -22,6 +24,7 @@ const Input = () => {
         }
       }
       fetchData();
+      setIsLoading(false);
     },
     [amount, firstCurrency, secondCurrency]
   );
@@ -60,14 +63,27 @@ const Input = () => {
 
   return (
     <>
-      <input type="text" value={amount} onChange={(e) => handleAmount(e)} />
-      <select onChange={(e) => handleFirstCurrency(e)} defaultValue="USD">
+      <input
+        type="text"
+        value={amount}
+        onChange={(e) => handleAmount(e)}
+        disabled={isLoading}
+      />
+      <select
+        onChange={(e) => handleFirstCurrency(e)}
+        defaultValue="USD"
+        disabled={isLoading}
+      >
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
         <option value="INR">INR</option>
       </select>
-      <select onChange={(e) => handleSecondCurrency(e)} defaultValue="EUR">
+      <select
+        onChange={(e) => handleSecondCurrency(e)}
+        defaultValue="EUR"
+        disabled={isLoading}
+      >
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
