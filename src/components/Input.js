@@ -9,7 +9,7 @@ const Input = () => {
 
   useEffect(
     function () {
-      async function fetchData() {
+      async function convert() {
         setIsLoading(true);
         try {
           const res = await fetch(
@@ -19,12 +19,16 @@ const Input = () => {
           console.log("data", data);
           // console.log("data.rates[secondCurrency]", data.rates[secondCurrency]);
           setConvertedAmount(data?.rates[toCur]);
+          setIsLoading(false);
         } catch (error) {
           console.log(error);
         }
       }
-      fetchData();
-      setIsLoading(false);
+
+      if (toCur === fromCur) {
+        return;
+      }
+      convert();
     },
     [amount, fromCur, toCur]
   );
@@ -63,7 +67,6 @@ const Input = () => {
 
   return (
     <>
-
       <input
         type="text"
         value={amount}
@@ -74,7 +77,7 @@ const Input = () => {
         onChange={(e) => handleFirstCurrency(e)}
         defaultValue="USD"
         disabled={isLoading}
-
+        className="select"
       >
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
